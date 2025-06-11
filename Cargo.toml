@@ -1,0 +1,8 @@
+[package]
+name = "Stores-and-Deltas"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+quote = "1.0.40"
+substreams = "0.6.1"
