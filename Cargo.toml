@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+prost = "0.14.1"
 quote = "1.0.40"
 substreams = "0.6.1"
