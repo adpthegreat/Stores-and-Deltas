@@ -10,7 +10,15 @@ pub fn get_value_from_bytes<T: FromBytes>(bytes: &[u8]) -> T {
     T::from_bytes(bytes)
 }
 
+pub fn get_value_from_bytes_proto<T: FromBytesProto>(bytes: &[u8]) -> T {
+    T::from_bytes(bytes)
+}
+
 pub fn convert_value_to_bytes<T: ToBytes>(val: &T) -> Vec<u8> {
+    T::to_bytes(val)
+}
+
+pub fn convert_value_to_bytes_proto<T: ToBytesProto>(val: &T) -> Vec<u8> {
     T::to_bytes(val)
 }
  
@@ -19,7 +27,12 @@ pub trait FromBytes: Sized {
     fn from_bytes(bytes: &[u8]) -> Self;
 }
 
-pub trait FromBytesProto: Sized {
+// this has the same bound as FromBytes so its poossible that bytes that dont form a protocol buffer 
+//can be accepted by the trait bound. Look into this 
+// the impl<T> has the right trait bounds that prevents this (Default + ::prost::Message) dw lol, 
+// so T can be something like a User {} rust binding of a proto
+
+pub trait FromBytesProto: Sized + Message + Default {
     fn from_bytes(bytes: &[u8]) -> Self;
 }
 
@@ -29,7 +42,7 @@ pub trait ToBytes : Sized + FromBytes + ToString {
 }
 
 // Make another trait definition for protos?
-pub trait ToBytesProto : Sized + FromBytesProto + Message + Default {
+pub trait ToBytesProto : FromBytesProto + Message + Default {
     fn to_bytes(&self) -> Vec<u8>;
 }
 
@@ -96,8 +109,8 @@ encode_to_bytes!(BigDecimal);
 encode_to_bytes!(f64);
 encode_to_bytes!(i64);
 
-//trying to create an impl for ToBytes for Proto (Message) type leads to overlapping implementations
-//so we are creating an entirely new trait for it 
+//trying to create an impl for ToBytes for Proto (Message) type (protobufs)  leads to overlapping implementations
+//so we are creating an entirely new trait for it , same for Array
 impl<T> ToBytesProto for T 
 where 
     T: Message + Default
