@@ -24,3 +24,26 @@ and the substreams-rs wasm integration just to understand wasm and how it works 
 - for the rust impl with hashmaps, use wasm-bindgen to make a typescript wasm binding with rust 
 
 - these are not open issues, not accepting PRs currently
+
+
+```md 
+
+Phantom data suggestions when you create generic type for struct but dont use it 
+error[E0063]: missing field `phantom` in initializer of `MockProtoStore<{type error}>`
+   --> src/mock_store/store.rs:282:9
+    |
+282 |         Self { data: Rc::new(RefCell::new(HashMap::new())) }
+    |         ^^^^ missing `phantom`
+
+error[E0063]: missing field `phantom` in initializer of `MockProtoStore<T>`
+   --> src/mock_store/store.rs:298:9
+    |
+298 |         Self { data: Rc::new(RefCell::new(HashMap::new())) }
+    |         ^^^^ missing `phantom
+```
+
+
+```
+Wanted to use just Cursor in the `StoreGetArray` like the canonical implementation, but its unstable and i need nightly lol 
+https://github.com/rust-lang/rust/issues/86369
+```
